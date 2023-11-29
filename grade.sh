@@ -38,15 +38,17 @@ cp $testfile grading-area
 cp -r lib grading-area
 cd grading-area
 
+javac ListExamples.java
+compiled=$?
+if [ $compiled -ne 0 ]; then
+  echo 'Code failed to compile:('
+  echo 'Submission failed the grader'
+fi
+
 javac -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar *.java
 java -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar org.junit.runner.JUnitCore TestListExamples > junitresults.txt
 
-compiled=$?
-
 if grep 'FAILURES' junitresults.txt; then
-  if [ $compiled!=0 ]; then 
-    echo 'Code failed to compile :('
-  fi
   echo 'The submission failed the grader.'
   echo '0/1'
 else 
